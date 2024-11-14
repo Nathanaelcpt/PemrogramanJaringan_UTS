@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stream Donasi</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <h1>Daftar Donasi</h1>
+    <div id="card-container" class="card-container"></div>
+
+    <script>
+        // Koneksi WebSocket ke server
+        const ws = new WebSocket("ws://localhost:8080/ws");
+
+        ws.onmessage = function(event) {
+            const donation = JSON.parse(event.data);
+            addDonationCard(donation);
+        };
+
+        function addDonationCard(donation) {
+            const container = document.getElementById('card-container');
+
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `
+                <h2>Pengirim: ${donation.sender}</h2>
+                <p><strong>Jumlah Donasi:</strong> Rp ${donation.amount}</p>
+                <p><strong>Pesan:</strong> ${donation.message}</p>
+            `;
+            container.appendChild(card);
+        }
+    </script>
+
+</body>
+
+</html>
